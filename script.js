@@ -1,53 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
+document.getElementById('get-pairing').addEventListener('click', function () {
+    const day = document.getElementById('day').value;
+    const mealTime = document.getElementById('meal-time').value;
+    getMeal(mealTime);
+    getDrink();
+});
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/assests/Style.css"> <!-- Corrected file path -->
-    <title>Random Meal Generator</title>
-</head>
+function getMeal(mealTime) {
+    fetch('https://www.themealdb.com/api/json/v1/1/random.php')
+        .then(response => response.json())
+        .then(data => displayMeal(data.meals[0]))
+        .catch(error => console.error('Error:', error));
+}
 
-<body>
-    <header>
-        <h1>Meal and Drink Pairing</h1>
-    </header>
+function getDrink() {
+    fetch('https://www.thecocktaildb.com/api/json/v1/1/random.php')
+        .then(response => response.json())
+        .then(data => displayDrink(data.drinks[0]))
+        .catch(error => console.error('Error:', error));
+}
 
-    <main>
-        <section id="selection">
-            <div>
-                <label for="day">Select Day:</label>
-                <select id="day">
-                    <option value="Monday">Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option>
-                    <option value="Saturday">Saturday</option>
-                    <option value="Sunday">Sunday</option>
-                </select>
-            </div>
-            <div>
-                <label for="meal-time">Select Meal:</label>
-                <select id="meal-time">
-                    <option value="Breakfast">Breakfast</option>
-                    <option value="Lunch">Lunch</option>
-                    <option value="Dinner">Dinner</option>
-                </select>
-            </div>
-            <button id="get-pairing">Get Pairing</button>
-        </section>
+function displayMeal(meal) {
+    const resultSection = document.getElementById('result');
+    resultSection.innerHTML = ''; // Clear previous results
+    const mealDiv = document.createElement('div');
+    mealDiv.innerHTML = `
+        <h2>${meal.strMeal}</h2>
+        <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+    `;
+    resultSection.appendChild(mealDiv);
+}
 
-        <section id="result">
-            <!-- Pairing results will be displayed here -->
-        </section>
-    </main>
+function displayDrink(drink) {
+    const resultSection = document.getElementById('result');
+    const drinkDiv = document.createElement('div');
+    drinkDiv.innerHTML = `
+        <h2>${drink.strDrink}</h2>
+        <img src="${drink.strDrinkThumb}" alt="${drink.strDrink}">
+    `;
+    resultSection.appendChild(drinkDiv);
+}
 
-    <footer>
-        <p>&copy; 2023 Meal and Drink Pairing</p>
-    </footer>
-
-    <script src="/assests/script.js"></script> <!-- Corrected file path -->
-</body>
-
-</html>
